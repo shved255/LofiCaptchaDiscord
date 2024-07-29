@@ -1,0 +1,5 @@
+name: LofiCaptchaDiscord
+main: Main.LofiCaptchaDiscord.Main
+version: 1.0
+commands:
+  loficaptcha:
