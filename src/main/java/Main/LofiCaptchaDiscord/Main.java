@@ -10,21 +10,28 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import Main.LofiCaptchaDiscord.Command.Command;
 import Main.LofiCaptchaDiscord.config.Config;
+import Main.LofiCaptchaDiscord.discord.CommandListener;
+import Main.LofiCaptchaDiscord.discord.LogHandler;
 import Main.LofiCaptchaDiscord.listeners.Listeners;
-import Main.LofiCaptchaDiscord.Players;
+import Main.LofiCaptchaDiscord.command.Command;
+import Main.LofiCaptchaDiscord.command.Players;
 
 @SuppressWarnings("unused")
 public final class Main extends JavaPlugin {
 	
-	public HashMap<String, Integer> onProverka = new HashMap<>();
-	public HashMap<String, Integer> noProverka = new HashMap<>();
-	public HashMap<String, Integer> timer = new HashMap<>();
+	public Map<String, Integer> onProverka = new ConcurrentHashMap<>();
+	public Map<String, Integer> noProverka = new ConcurrentHashMap<>();
+	public Map<Player, String> codeMap = new ConcurrentHashMap<>();
+	public Map<String, Integer> timer = new ConcurrentHashMap<>();
   
 	private static Main inst;
 	private Listeners listener;
@@ -82,16 +89,20 @@ public final class Main extends JavaPlugin {
       return inst;
    }
    
-   public HashMap<String, Integer> getNoProverka() {
+   public Map<String, Integer> getNoProverka() {
 	   return this.noProverka;
    }
    
-   public HashMap<String, Integer> getOnProverka() {
+   public Map<String, Integer> getOnProverka() {
 	   return this.onProverka;
    }
    
-   public HashMap<String, Integer> getTimer() {
+   public Map<String, Integer> getTimer() {
 	   return this.timer;
+   }
+   
+   public Map<Player, String> getCodeMap() {
+	   return this.codeMap;
    }
    
    public Integer getTimer1(String nick) {
@@ -99,6 +110,12 @@ public final class Main extends JavaPlugin {
    		return timer.get(nick);
    	} else throw new IllegalStateException("nick not in map.");
    }
+   
+   public String getCode(Player player) {
+	   	if(codeMap.containsKey(player)) {
+	   		return codeMap.get(player);
+	   	} else throw new IllegalStateException("nick not in map.");
+	   }
    
    public Listeners getListener() {
 	   return this.listener;
